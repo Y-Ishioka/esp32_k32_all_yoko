@@ -17,24 +17,26 @@
 #define DEF_FONT_WIDTH  32
 #endif
 
-#define DEF_FONT_OUT_HIGH   64
-#define DEF_FONT_OUT_WIDTH  64
+#define DEF_FONT_OUT_HIGH    64
+#define DEF_FONT_OUT_WIDTH   64
 
-#define DEF_YOJI_MOJI        4
-#define DEF_YOJI_LST_MAX   200
+#define DEF_YOJI_MOJI         4
+#define DEF_YOJI_LST_MAX    200
 
-#define DEF_NIJI_LST_MAX   500
+#define DEF_NIJI_LST_MAX    500
 
-#define DEF_TIM_YOJI_DLY   500
-#define DEF_TIM_SET_DLY    500
-#define DEF_TIM_GRAD_DLY    50
-#define DEF_TIM_CLR_DLY    500
+#define DEF_TIM_START_DLY   500
+#define DEF_TIM_YOJI_DLY   1000
+#define DEF_TIM_SET_DLY    1000
+#define DEF_TIM_GRAD_DLY     50
+#define DEF_TIM_CLR_DLY     500
 
 #define DEF_TIM_NIJI_GRAD_DLY    50
-#define DEF_TIM_ANS_DISP  5000
-#define DEF_TIM_NEXT_DLY  3000
+#define DEF_TIM_ANS_DISP   3000
+#define DEF_TIM_NEXT_DLY   1000
+#define DEF_ANS_WAIT_CNT      9
 
-#define DEF_DP_X_OFFSET     40
+#define DEF_DP_X_OFFSET      40
 
 #define RGB565_BLACK        ST77XX_BLACK
 #define RGB565_RED          ST77XX_RED

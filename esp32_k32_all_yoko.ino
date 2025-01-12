@@ -72,10 +72,10 @@ int  x_item_2nd_cnt;
 
 int  x_demo_number;
 
-unsigned char  kigou_quest[2] = { 0x81, 0x48 };
-unsigned char  title_yoji[8] = { 0x8E,0x6C,0x8E,0x9A,0x8F,0x6E,0x8C,0xEA };
-unsigned char  title_eki[8] = { 0x8E,0x6C,0x8E,0x9A,0x89,0x77,0x96,0xBC };
-unsigned char  title_niji[8] = { 0x93,0xF1,0x8E,0x9A,0x8F,0x6E,0x8C,0xEA };
+unsigned char  kigou_quest[] = { 0x81, 0x48 };
+unsigned char  title_yoji[] = { 0x8E,0x6C,0x8E,0x9A,0x8F,0x6E,0x8C,0xEA, 0x98,0x41, 0x8d,0xbd };
+unsigned char  title_eki[] = { 0x8E,0x6C,0x8E,0x9A,0x89,0x77,0x96,0xBC, 0x98,0x41, 0x8d,0xbd };
+unsigned char  title_niji[] = { 0x93,0xF1,0x8E,0x9A,0x8F,0x6E,0x8C,0xEA, 0x96,0xe2, 0x91,0xe8 };
 
 
 unsigned char  kigou_right2[ 16 ][ 16 ] = {
@@ -129,6 +129,7 @@ uint16_t  lcd_color_tbl[] = {
 };
 
 #define  DEF_LCD_COLOR_NUM  6
+#define  DEF_TITLE_COLOR    RGB565_NEON
 
 
 #define DR_REG_RNG_BASE  0x3ff75144
@@ -573,6 +574,7 @@ void  task1( void )
     int  pos;
     int  loop;
     int  tmp_yoji_item_pos;
+    int  title_size;
 
     yoji_pos = 0;
     yoji_dir = 0;
@@ -597,20 +599,22 @@ void  task1( void )
 
     if( x_demo_number == 1 ) {
         title_pnt = (unsigned char *)title_yoji;
+        title_size = sizeof(title_yoji)/2;
     } else {
         title_pnt = (unsigned char *)title_eki;
+        title_size = sizeof(title_eki)/2;
     }
 
-    for( i=0 ; i<4 ; i++ ) {
+    for( i=0 ; i<title_size ; i++ ) {
         memset( tmp_buffer, 0x00, sizeof(tmp_buffer) );
         make_kanji_bitmap( title_pnt, (unsigned char  *)tmp_buffer );
-        set_lcd_image( (unsigned char *)tmp_buffer, 0, 34*i, DEF_FONT_WIDTH, DEF_FONT_HIGH, RGB565_BLUE );
+        set_lcd_image( (unsigned char *)tmp_buffer, 0, 34*i, DEF_FONT_WIDTH, DEF_FONT_HIGH, DEF_TITLE_COLOR );
         title_pnt += 2;
     }
    }
 #endif
 
-    delay( DEF_TIM_YOJI_DLY );
+    delay( DEF_TIM_START_DLY );
 
     if( x_demo_number == 1 ) {
         yoji_data_pnt = (unsigned char *)yoji_data;
@@ -896,6 +900,7 @@ void task2( void )
     int  num;
     int  x, y;
     int  countdown;
+    int  title_size;
 
     disp_color = 0;
     disp_color_bak = 0;
@@ -914,11 +919,12 @@ void task2( void )
     int  i;
 
     title_pnt = (unsigned char *)title_niji;
+    title_size = sizeof(title_niji)/2;
 
-    for( i=0 ; i<4 ; i++ ) {
+    for( i=0 ; i<title_size ; i++ ) {
         memset( tmp_buffer, 0x00, sizeof(tmp_buffer) );
         make_kanji_bitmap( title_pnt, (unsigned char  *)tmp_buffer );
-        set_lcd_image( (unsigned char *)tmp_buffer, 0, 34*i, DEF_FONT_WIDTH, DEF_FONT_HIGH, RGB565_BLUE );
+        set_lcd_image( (unsigned char *)tmp_buffer, 0, 34*i, DEF_FONT_WIDTH, DEF_FONT_HIGH, DEF_TITLE_COLOR );
         title_pnt += 2;
     }
    }
@@ -1020,7 +1026,7 @@ void task2( void )
         make_kanji_bitmap( kigou_quest, (unsigned char  *)tmp_buffer );
         set_lcd_image_x2( (unsigned char *)tmp_buffer, 88+DEF_DP_X_OFFSET, 88, DEF_FONT_WIDTH, DEF_FONT_HIGH, RGB565_WHITE );
 
-        for( countdown=5 ; countdown >= 0 ; countdown-- ) {
+        for( countdown=DEF_ANS_WAIT_CNT ; countdown >= 0 ; countdown-- ) {
             y_fillRect( 300, 200, DEF_FONT_WIDTH/2, DEF_FONT_HIGH, RGB565_BLACK );
             memset( tmp_ank_buffer, 0x00, sizeof(tmp_ank_buffer) );
             set_font( read_fontx2_a( DEF_FONT_A_VAR, (unsigned int)('0'+countdown) ), (unsigned char *)tmp_ank_buffer, DEF_FONT_WIDTH/2 );
@@ -1038,7 +1044,7 @@ void task2( void )
         make_kanji_bitmap( niji_ans, (unsigned char  *)tmp_buffer );
         set_lcd_image_x2( (unsigned char *)tmp_buffer, 88+DEF_DP_X_OFFSET, 88, DEF_FONT_WIDTH, DEF_FONT_HIGH, RGB565_WHITE );
 
-        delay( DEF_TIM_NEXT_DLY );
+        delay( DEF_TIM_ANS_DISP );
 
         clr_lcd_image_x2( (unsigned char *)yoji_buffer1[0],   0+DEF_DP_X_OFFSET,  88, DEF_FONT_WIDTH, DEF_FONT_HIGH, RGB565_ORANGE );
         if( check_demo_mode() != 0 ) { return; }
@@ -1053,7 +1059,7 @@ void task2( void )
         y_fillRect( 300, 200, DEF_FONT_WIDTH/2, DEF_FONT_HIGH, RGB565_BLACK );
         if( check_demo_mode() != 0 ) { return; }
 
-        delay( DEF_TIM_CLR_DLY );
+        delay( DEF_TIM_NEXT_DLY );
     }
 }
 
@@ -1097,4 +1103,3 @@ void loop( void )
   }
   delay( 100 );
 }
-
